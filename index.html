@@ -4,13 +4,29 @@
         <title>Test Webpage Local</title>
         <link rel="stylesheet" href="index.css">
         <script src="https://d3js.org/d3.v5.min.js" charset="utf-8"></script>
+        <style>
+            .bar{
+                height: 30;
+                text-align: center;
+                margin: 10px;
+                background: lightblue;
+                line-height: 30px;
+            }
+        </style>
     </head>
 
     <body>
         <h1>Filter the visualization by date with the drop-down button</h1>
         <script>
             d3.csv("test_host.csv").then(function(data){
-                console.log(data)
+                var bars = d3.select('body').selectAll('div').data(data);
+                bars.enter().append('div').classed('bar',true)
+                .style('width', function(d) {
+                    return d.Val + 'px';
+                })
+                .text(function(d){
+                    return d.Val
+                })
             })
         </script>
     </body>
