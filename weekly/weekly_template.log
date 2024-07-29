@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.12) (preloaded format=pdflatex 2024.1.12)  27 JUL 2024 21:23
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.12) (preloaded format=pdflatex 2024.1.12)  28 JUL 2024 22:32
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -473,7 +473,7 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 33.
  [1
 
-{C:/Users/xuke1/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Users/xuke1/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}] [2] (weekly_template.aux)
+{C:/Users/xuke1/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Users/xuke1/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}] [2] [3] (weekly_template.aux)
  ***********
 LaTeX2e <2023-11-01>
 L3 programming layer <2024-01-04>
@@ -482,17 +482,17 @@ Package rerunfilecheck Info: File `weekly_template.out' has not changed.
 (rerunfilecheck)             Checksum: 0073A4FC72DA9522209D563CD3C6FAD6;9576.
  ) 
 Here is how much of TeX's memory you used:
- 12003 strings out of 474486
- 184757 string characters out of 5743755
- 1935528 words of memory out of 5000000
+ 12004 strings out of 474486
+ 184763 string characters out of 5743755
+ 1936528 words of memory out of 5000000
  34094 multiletter control sequences out of 15000+600000
  579448 words of font info for 76 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,6n,79p,1325b,440s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,6n,79p,1325b,444s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/xuke1/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmb8a.pfb><C:/Users/xuke1/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmr8a.pfb>
-Output written on weekly_template.pdf (2 pages, 54215 bytes).
+Output written on weekly_template.pdf (3 pages, 59466 bytes).
 PDF statistics:
- 128 PDF objects out of 1000 (max. 8388607)
- 27 named destinations out of 1000 (max. 500000)
+ 133 PDF objects out of 1000 (max. 8388607)
+ 28 named destinations out of 1000 (max. 500000)
  193 words of extra memory for PDF output out of 10000 (max. 10000000)
 

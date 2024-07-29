@@ -32,7 +32,7 @@
 \maketitle
 
 \begin{abstract}
-This document is the essay of the Narrative Visualisation project of CS416 Data Visualisation.
+This document is the essay of the Narrative Visualisation project of CS416 Data Visualisation. Please visit \href{https://kexu1739.github.io/CS416_NarrativeVisualization/}{link} for the webpage.
 \end{abstract}
 
 \section{Messaging}
@@ -42,7 +42,7 @@ This document is the essay of the Narrative Visualisation project of CS416 Data 
 
 \subsection{What is the message you are trying to communicate with the narrative visualization?}
 \label{subsec:1}
-\paragraph{} The visualization is utilizing the U.S. Music revenue by year and type data from 1973 to 2018, and is trying to provide first an overview on the generated revenue, then
+\paragraph{} The visualization is utilizing the U.S. Music revenue by year and format data from 1973 to 2018, and is trying to provide first an overview on the generated revenue, then
 drill down to show the details for each year for all types, the webpage is designed to be interactive on users' demand when they try to get more details from the chart.
 
 
@@ -50,58 +50,75 @@ drill down to show the details for each year for all types, the webpage is desig
 \label{sec:NarrativeStructure}
 \subsection{Which structure was your narrative visualization designed to follow (martini glass, interactive slide show or drop-down story)?}
 \label{subsec:NarrativeStructure1}
-
+\paragraph{}The visualization is following a dirll-down story type of sturcture. 
 \subsection{How does your narrative visualization follow that structure? (All of these structures can include the opportunity to "drill-down" and explore. The difference is where that opportunity happens in the structure.)}
 \label{subsec:NarrativeStructure2}
-
+\paragraph{}There are in total 3 scenes in the visualization. The first scene is showing the overview across history, and allows user to dill down to specific year for a breakdown on revenue (and move to second scene). Then the second scene breaks down the total revenue by record format as a bar chart. Again users are allowed to focus on each of the bar and click them, which bring them to the thrid/last scene, where the revenue for selected format is shown (highlighted) as a percentage of original revenue in a pie chart.
+On the third scene user can also choose to check other pieces of the pie chart, or choose to go back to first two scenes and remake other selections.
 
 \section{Visual Structure}
 \label{sec:VisualStructure}
 \subsection{What visual structure is used for each scene?}
 \label{subsec:VisualStructure1}
+\paragraph{} The first scene is using a line chart with dot to show the overview of music record revenue through history.
+The second scene is using a bar chart to show the break down of music record revenue in a year by format. And the thrid scene is showing the percentage revenue to total revenue in the same year as second scene in a pie chart.
 \subsection{How does it ensure the viewer can understand the data and navigate the scene?}
 \label{subsec:VisualStructure2}
-
+\paragraph{}On the top left of the visualization page there is notification on the operation a user can carry on this page, as well as how to move to the next page. Buttons with meaningful text is placed on the top left corner as a guidance of the structure (i.e. allow to move to next or previous page).
+The chart are constructed with axis names and tick names together with title indicating the content of each chart.
 \subsection{How does it help the viewer transition to other scenes, to understand how the data connects to the data in other scenes?}
 \label{subsec:VisualStructure3}
+\paragraph{}Each dot element in the first scene, and each bar element in the second scene is clickable, which helps the viewer go to the next scene, and specifc format change to the selected element is applied when view move mouse onto/away or click the element
+, which helps viewer to understand exactly which element is being viewed (i.e. the exact data point that is connected). Also, the button on the top-left corner helps viewer to go to prev/next page (if reasonable).
 
 \subsection{How does it highlight to urge the viewer to focus on the important parts of the data in each scene?}
 \label{subsec:VisualStructure4}
-
+When user moves the mouse onto the selected element (i.e. focus at that moment), the format of that element will change (points grows, bar darkens, and tooltip label shows up nearby)
 
 \section{Scenes}
 \label{sec:Scenes}
 \subsection{What are the scenes of your narrative visualization?}
 \label{subsec:Scenes1}
+\paragraph{}The first scene is a line chart with dot to show the overview of music record revenue through history.
+The second scene is a bar chart to show the break down of music record revenue in a year by format. And the thrid scene is showing the percentage revenue to total revenue in the same year as second scene in a pie chart.
 \subsection{How are the scenes ordered, and why?}
 \label{subsec:Scenes2}
-
+\paragraph{}Line chart follows by a bar chart then follows a pie chart. This follows from general information to specific information, which aligns with the drill-down structure and aligns with how user would analyze this type of data.
 
 \section{Annotations}
 \label{sec:Annotations}
 \subsection{What template was followed for the annotations, and why that template?}
 \label{subsec:Annotations1}
+\paragraph{}Annotation is following a feature:value structure per line structure  within a square text box, with white background and black characters.
 \subsection{How are the annotations used to support the messaging?}
 \label{subsec:Annotations2}
+\paragraph{}The annotation is used as supporting information for each individual element interested.
+
 \subsection{Do the annotations change within a single scene, and if so, how and why}
 \label{subsec:Annotations3}
+\paragraph{}The annotation will change within a scene if user selects another element inside that scene.
 
 \section{Parameters}
 \label{sec:Parameters}
 \subsection{What are the parameters of the narrative visualization?}
 \label{subsec:Parameters1}
+\paragraph{}The parameters are years and music formats.
 \subsection{What are the states of the narrative visualization?}
 \label{subsec:Parameters2}
+\paragraph{}The stage of this visualization is again defined through the 3 scenes, transition between scenes will be transition of the states.
 \subsection{How are the parameters used to define the state and each scene?}
 \label{subsec:Parameters3}
-
+\paragraph{}On first two scenes, selection of a particular value of the parameters will result in state/scene transition. On the third scene the state is static, and only allows back-ward transition to the second scene.
 
 \section{Triggers}
 \label{sec:Triggers}
 \subsection{What are the triggers that connect user actions to changes of state in the narrative visualization?}
 \label{subsec:Triggers1}
+\paragraph{}Clicking on points buttons and bars are the triggers to state/scene changes in the visualization.
 \subsection{What affordances are provided to the user to communicate to them what options are available to them in the narrative visualization?}
 \label{subsec:Triggers2}
+\paragraph{}Each page has a note on top-left corner that communicates to user on what to do to move to the next page or get more details. 
+Clicking the wrong button will also triggers alert box that indicates in-validity of the operation.
 
 
 

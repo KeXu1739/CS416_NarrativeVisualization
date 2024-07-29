@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1722133419.59124 "c:/Users/xuke1/Code/Project/CS416/CS416_NarrativeVisualization/weekly/weekly_template.tex" "weekly_template.pdf" "weekly_template" 1722133420.44284 0
+["pdflatex"] 1722223921.32694 "c:/Users/xuke1/Code/Project/CS416/CS416_NarrativeVisualization/weekly/weekly_template.tex" "weekly_template.pdf" "weekly_template" 1722223922.6752 0
   "C:/Users/xuke1/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1705119431 82507 a9eef8696c92627b87e9975edea03b2a ""
   "C:/Users/xuke1/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1705119532 24224934 540d38e7fbdb3aa310038f174d318fa5 ""
   "C:/Users/xuke1/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc" 1458473887 4993 80dc9bab7f31fb78a000ccfed0e27cab ""
@@ -88,10 +88,10 @@
   "C:/Users/xuke1/AppData/Local/Programs/MiKTeX/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "C:/Users/xuke1/AppData/Local/Programs/MiKTeX/tex/latex/wrapfig/wrapfig.sty" 1044403200 26220 3701aebf80ccdef248c0c20dd062fea9 ""
   "C:/Users/xuke1/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1700127522 55487 80a65caedd3722f4c20a14a69e785d8f ""
-  "c:/Users/xuke1/Code/Project/CS416/CS416_NarrativeVisualization/weekly/weekly_template.tex" 1722133418 4324 410657fcd29987a6d8394f7c494f86f9 ""
-  "weekly_template.aux" 1722133420 7180 962efce5fe4b900d0d7080fc236e2e60 "pdflatex"
-  "weekly_template.out" 1722133420 9576 0073a4fc72da9522209d563cd3c6fad6 "pdflatex"
-  "weekly_template.tex" 1722133418 4324 410657fcd29987a6d8394f7c494f86f9 ""
+  "c:/Users/xuke1/Code/Project/CS416/CS416_NarrativeVisualization/weekly/weekly_template.tex" 1722223921 8321 1c1dc78d5f95f0e7a67d7606c19d1d23 ""
+  "weekly_template.aux" 1722223922 8515 acf5e4b94356a1a3755564dcdf79ae17 "pdflatex"
+  "weekly_template.out" 1722223922 9576 0073a4fc72da9522209d563cd3c6fad6 "pdflatex"
+  "weekly_template.tex" 1722223921 8321 1c1dc78d5f95f0e7a67d7606c19d1d23 ""
   (generated)
   "weekly_template.aux"
   "weekly_template.log"
