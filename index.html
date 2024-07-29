@@ -1,33 +1,443 @@
 <!DOCTYPE html>
 <html lang="en">
     <head> 
-        <title>Test Webpage Local</title>
+        <title>U.S. MUSIC REVENUE HISTORY VISUALIZATION</title>
         <link rel="stylesheet" href="index.css">
         <script src="https://d3js.org/d3.v5.min.js" charset="utf-8"></script>
-        <style>
-            .bar{
-                height: 30;
-                text-align: center;
-                margin: 10px;
-                background: lightblue;
-                line-height: 30px;
-            }
-        </style>
     </head>
-
+    
     <body>
-        <h1>Filter the visualization by date with the drop-down button</h1>
+        <h2> Data Source </h2>
+        <p> The source of this data visualization is from <a rel="music_revenue_data" href="https://www.kaggle.com/datasets/thedevastator/us-recorded-music-revenue-by-format"> kaggle data</a>, RIAA 
+            has  provided a tableau visualization on the revenue on website <a rel="riaa_visualization" href="https://www.riaa.com/u-s-sales-database/"> RIAA Visualization</a>, please refer to the page if more details is needed.
+        </p>
+        <h2> Intro </h2>
+        <p> This visualization provides break-down on the music revenue through chart/graphs.</p>
+        <h3 id="first_scene_note">Filter the visualization by Year with the drop-down button</h3>
+        
         <script>
-            d3.csv("test_host.csv").then(function(data){
-                var bars = d3.select('body').selectAll('div').data(data);
-                bars.enter().append('div').classed('bar',true)
-                .style('width', function(d) {
-                    return d.Val + 'px';
-                })
-                .text(function(d){
-                    return d.Val
-                })
+            const margin = {top: 100, right:200, bottom:100, left:200}
+            const width = window.innerWidth - margin.left - margin.right
+            const height = window.innerHeight - margin.top - margin.bottom
+            const button1 = d3.select('body')
+                        .append('button')
+                        .attr("class", '.b')
+                        .attr('type', 'button') 
+                        .attr('id', 'prev') 
+                        .text('Back')
+                    
+            const button2 = d3.select('body')
+                        .append('button')
+                        .attr("class", '.b')
+                        .attr('type', 'button')
+                        .attr('id', 'next')
+                        .text('Next')
+
+
+            d3.csv('US_Recorded_Music_Revenues_by_Format_filtered.csv', function(d){
+                    return {
+                            Format: d.Format,
+                            Year: +d.Year,
+                            Units: +d.Units,
+                            Revenue: +d.Revenue,
+                            Revenue_Inf_Adj: +d.Revenue_Inf_Adj,
+                    }
             })
+            .then(data => {
+                    Scene1(data)
+            })
+
+
+
+            // Helper functions to filter data based on attributes
+            function filterByYear(data, yearVal){
+                    return data.filter( d => d.Year === yearVal);
+            }
+
+            function aggRevByYear(data){
+                    // accumulate the revenue for a year from all formats and return object for plotting
+                    // every year is set to the last day of that year
+                    const obj = data.reduce((acc, d) => {
+                            if (!acc[d.Year]){
+                                    
+                                    acc[d.Year] = {
+                                            Date: new Date(d.Year, 11, 31), 
+                                            Revenue:d.Revenue, 
+                                            Revenue_Inf_Adj:d.Revenue_Inf_Adj,
+                                            Year:d.Year
+                                    }
+                            }else{
+                                    acc[d.Year].Revenue += d.Revenue
+                                    acc[d.Year].Revenue_Inf_Adj += d.Revenue_Inf_Adj
+                            }
+                            return acc;
+                    }, {});
+                    return Object.values(obj);
+            }
+
+            function filterByFormat(data, formatVal){
+                    return data.filter(d => d.Format === formatVal);
+            }
+
+            function filterYearArray(data){
+                    // this function go over the source data, filter the year, make it unique, 
+                    // and sort the final year array and return
+                    const years = data.map(item => new Date(item.Year, 11, 31).getFullYear());
+                    const uniqueyears = new Set(years);
+                    const uniqueyears_arr = Array.from(uniqueyears);
+                    uniqueyears_arr.sort((a, b) => a - b);
+                    return uniqueyears_arr
+            }
+
+            function removeSVGAndTip(){
+                    // clean window by removing all svg elements from the screen
+                    // to be safe, also clean all the tooltips, which is defined in scene3 (unlikely not to be cleaned though)
+                    d3.selectAll('svg').remove();
+                    d3.selectAll(".tooltip").remove();
+            }
+
+            // Helper functions for charting/graphing the 3 scenes, for removing corresponding elements when switching scenes
+            function Scene1(data){
+                    // scene1: a trend chart using total revenue for each year, user can hover on a dot, under which case dot will grow bigger and
+                    //  will show a tooltip giving year:revenue; user can also click the dot, which kick start the scene 2 generator
+                    removeSVGAndTip();
+                    const svg_scen1 = d3.select('body').append('svg')
+                            .attr('height', height + margin.top + margin.bottom)
+                            .attr('width', width + margin.left + margin.right)
+                                    .append('g')
+                                    .attr('transform', `translate(${margin.left}, ${margin.bottom})`)
+                    var year_agg_data = aggRevByYear(data);
+                    const xScale = d3.scaleTime()
+                                    .domain(d3.extent(year_agg_data.map(d => d.Date)))
+                                    .range([0, width])
+                    const yScale = d3.scaleLinear()
+                                            .domain([0, d3.max(year_agg_data.map(d=>d.Revenue))])
+                                            .range([height, 0])
+                    const xAxis = svg_scen1.append('g').attr('class', 'x axis')
+                                    .attr('transform', `translate(0, ${height})`)
+                                    .call(d3.axisBottom(xScale))
+                                            .append('text')
+                                                    .attr('x', width/2)
+                                                    .attr('y', 50)
+                                                    .text('Date (EOY)')
+                                    
+
+                    const yAxis = svg_scen1.append('g').attr('class', 'y axis')
+                                    .call(d3.axisLeft(yScale))
+                                    .append('text')
+                                            .attr('x', -100)
+                                            .attr('y', height/2)
+                                            .text('Revenue($)')
+                                    
+                    const title  = svg_scen1.append('text')
+                                    .attr('class', 'title')
+                                            .attr('x', width/2)
+                                            .attr('y', -30)
+                                            .text('Music Records Revenue Trend')
+                    const note  = svg_scen1.append('text')
+                                    .attr('class', 'note')
+                                            .attr('x', 0)
+                                            .attr('y', -10)
+                                            .text('[click on each dot for next page]')
+
+                    const line = d3.line()
+                            .x(d => xScale(d.Date))
+                            .y(d => yScale(d.Revenue))
+                            .curve(d3.curveCardinal)
+
+                    const path = svg_scen1.append('path')
+                            .datum(year_agg_data)
+                            .attr('d', line)
+                            .attr('class', 'line')
+                            .style('stroke', '#0D5D8B')
+                            .style('stroke-width', 2)
+                            .style('fill', 'none') 
+                    const circle = svg_scen1.selectAll('.circle')
+                            .data(year_agg_data)
+                            .enter().append('circle')
+                            .attr('class', 'circle')
+                            .attr('cx', d => xScale(d.Date))
+                            .attr('cy', d=> yScale(d.Revenue))  
+                            .attr('r', 7)
+                            .style('stroke', '#011d38')
+                            .style('stoke-width', 3)
+                            .style('fill', '#0D5D8B')
+                    
+                    
+                    circle.on('mouseover', function(d) {
+                            const bar = d3.select(this).transition().duration(300)
+                                    .style('r', 15)
+
+                    
+                    })
+                    .on('mouseout', function(d) {
+                            const bar = d3.select(this).transition().duration(300)
+                                    .style('r', 7)
+
+                    }).on('click', function(d) {
+                                    // trigger: on clicking a point: goes to second plot scene
+                                    Scene2Plot(data, d)
+                            })
+                    .on('mousedown', function(d){
+                            // trigger: on clicking a point, the dot becomes black
+                            d3.select(this).transition().duration(300).style('fill', 'black')
+                    })
+
+                    d3.select('#prev').on("click", function() {
+                            Scene1(data)
+                    })
+                    d3.select('#next').on("click", function() {
+                            alert("click on a dot to move to next page.")
+                    })
+            };
+
+            function Scene2Plot(data, obj){
+                    // 
+                    removeSVGAndTip();
+                    console.log(obj);
+                    var year_data = filterByYear(data, obj.Year);
+                    var svg_scen2 = d3.select("body").append('svg')
+                                    .attr('height', height + margin.top + margin.bottom)
+                                    .attr('width', width + margin.left + margin.right)
+                                            .append('g')
+                                            .attr('transform', `translate(${margin.left}, ${margin.bottom})`);
+                    const formatNumber = d3.format(",");
+                    // // Revenue on X
+                    const xScale = d3.scaleLinear().domain([0, d3.max(year_data.map(d=>d.Revenue))]).range([0, width])
+                    // Format value on Y
+                    const yScale = d3.scaleBand().domain(year_data.map(d=>d.Format)).range([height, 0])
+                                        .padding(0.1)
+                    const xAxis = svg_scen2.append('g').attr('class', 'x axis')
+                            .attr('transform', `translate(0, ${height})`)
+                            .call(d3.axisBottom(xScale))
+                            .append("text")
+                                    .attr('x', width / 2)
+                                    .attr('y', 30)
+                                    .attr('dy', '0.7em')
+                                    .text('Record Revenue($)')
+                                                    
+                
+                    const yAxis = svg_scen2.append('g').attr('class', 'y axis')
+                            // .attr('transform', `translate(0, ${height})`)
+                            .call(d3.axisLeft(yScale))
+
+                    const bars = svg_scen2.selectAll('.bars').data(year_data)
+                            .enter().append('rect')
+                            .attr('class', '.bar')
+                            .attr("x", 0)
+                            .attr("y",d => yScale(d.Format))
+                            .attr("height", yScale.bandwidth())
+                            .attr('width', d => xScale(d.Revenue))
+                            .style('fill', "#4b97c9")
+                            .style('opacity', .5)
+                            
+                            bars.on('mouseover', function(d) {
+                                    const bar = d3.select(this).transition().duration(500)
+                                            .style('opacity', .9)
+
+                            })
+                            .on('mouseout', function(d) {
+                                    const bar = d3.select(this).transition().duration(500)
+                                            .style('opacity', .5)
+
+                            })
+                            .on('click', function(d) {
+                                    // trigger: on clicking a bar: goes to plot three
+                                    Scene3PieAndInforForAFormat(data, d)
+                            })
+                            .on('mousedown', function(d){
+                                    // trigger: on clicking a point, the dot becomes black
+                                    d3.select(this).transition().duration(200)
+                                    .style('opacity', 1)
+                            })
+                    const title  = svg_scen2.append('text')
+                            .attr('class', 'title')
+                                    .attr('x', width/2)
+                                    .attr('y', -25)
+                                    .text('Music Records Revenue Break-down Year: ' + obj.Year);
+                    const note  = svg_scen2.append('text')
+                                    .attr('class', 'note')
+                                            .attr('x', 0)
+                                            .attr('y', -10)
+                                            .text('[click on each bar for next page]')
+                    const text = svg_scen2.selectAll('.points').data(year_data)
+                            .enter().append('text')
+                                    .attr('class', 'axis text')
+                                    .attr('x', d => xScale(d.Revenue))
+                                    .attr('y', d => yScale(d.Format))
+                                    .attr('dy', yScale.bandwidth()/2)
+                                    .text(d => formatNumber(d.Revenue))
+                                            .style("fill", 'darkblue')
+                                            .style('text-anchor', 'start')
+                                            .style('font-size', 10)
+                                            .style('font-family', 'verdana')
+                                            // .attr('transform', function(d) {
+                                            //         return  "rotate(45," + xScale(d.Revenue) + "," + yScale(d.Format) + ")";
+                                            // })
+                    d3.select('#prev').on("click", function() {
+                            Scene1(data)
+                    })
+                    d3.select('#next').on("click", function() {
+                            alert("click on a bar to move to next page.")
+                    })                
+                    
+            };
+
+            function Scene3PieAndInforForAFormat(data, obj){
+                    removeSVGAndTip();
+                    console.log(obj);
+                    const formatNumber = d3.format(",");
+                    var original_opacity = 0.2;
+                    var new_opacity = 1;
+                    var year_data = filterByYear(data, obj.Year);
+                    var all_formats = year_data.filter(d => d.Format)
+
+                    var ttl = d3.sum(year_data, d=> d.Revenue)
+                    var pct_data = year_data.map(function(d) {
+                            // additional data for tool tip to show
+                            return {
+                                    Format: d.Format,
+                                    Pctg: d.Revenue/ttl,
+                                    Revenue: d.Revenue,
+                                    Revenue_Inf_Adj: d.Revenue_Inf_Adj,
+                                    Units: d.Units
+
+                            }
+                    })
+                    var svg_scen3 = d3.select("body").append('svg')
+                                    .attr('height', height + margin.top + margin.bottom)
+                                    .attr('width', width + margin.left + margin.right)
+                                            .append('g')
+                                            .attr('transform', `translate(${margin.left}, ${margin.bottom})`);
+                    
+
+                    const radius = Math.min(width, height) / 2
+                    const colorScale = d3.scaleLinear().domain([0, all_formats.length-1]).range(["white", "green"])
+                                    
+                    const pie = d3.pie().value(d => d.Pctg).sort(null)
+                    const arc = d3.arc().innerRadius(0).outerRadius(radius * 0.9)
+                    const hoverArc = d3.arc().innerRadius(0).outerRadius(radius)
+
+                    const title  = svg_scen3.append('text')
+                            .attr('class', 'title')
+                                    .attr('x', width/2)
+                                    .attr('y', -25)
+                                    .text('Percentage of Total Dollar Revenue: ' + obj.Format);
+                    const subtitle  = svg_scen3.append('text')
+                                    .attr('class', 'note')
+                                            .attr('x', width/2)
+                                            .attr('y', -5)
+                                            .text('(Earlier Selection Highligted in Blue)');
+                                    
+                    const note  = svg_scen3.append('text')
+                                    .attr('class', 'note')
+                                            .attr('x', 0)
+                                            .attr('y', -10)
+                                            .text('[click on each area for details]')
+                    const g = svg_scen3.selectAll('.arc')
+                                    .data(pie(pct_data)).enter().append('g')
+                                    .attr('class', 'arc')
+                                    .attr('transform', `translate(${radius}, ${radius})`)
+                    g.append('path')
+                            .attr('d', arc)
+                            .attr('class', 'arc')
+                            .style('fill', function(d, i){
+                                    if(d.data.Format == obj.Format){
+                                            return 'blue';
+                                    }else{
+                                            return colorScale(i);
+                                    }
+                                    
+                            })
+                            .style('fill-opacity', function(d) {
+                                    if(d.data.Format == obj.Format){
+                                            return new_opacity;
+                                    }else{
+                                            return original_opacity;
+                                    }
+
+                            })
+                            .style('stroke', '#0E0B16')
+                            .style('stroke-width', 4)
+                            .on('mouseover',function(d, i) {
+                                    d3.select(this)
+                                    .style('fill-opacity', new_opacity)
+                                    .transition().duration(500)
+                                    .attr('d', hoverArc)
+                            })
+                            .on('mouseout',function(d, i) {
+                                    if(d.data.Format == obj.Format){
+                                            d3.select(this)
+                                            .style('fill-opacity', new_opacity)
+                                            .transition().duration(500)
+                                            .attr('d', arc)
+                                    }else{
+                                            d3.select(this)
+                                            .style('fill-opacity', original_opacity)
+                                            .transition().duration(500)
+                                            .attr('d', arc)
+                                    }
+                                    
+                            }).on('mousedown', function(d){
+                                    var position = d3.mouse(svg_scen3.node());
+                                    console.log(position);
+                                    d3.select("body").append('div').classed('tooltip', true)
+                                            .style('left', position[0] + 20 + 'px')
+                                            .style('top', position[1] + 150 + 'px')
+                                                    .html(
+                                                            d.data.Format + ": " + Math.round(1000*d.data.Pctg)/10 + "%"+"<br>"+
+                                                            "Units: " + formatNumber(d.data.Units) + "<br>" +
+                                                            "Revenue: " + formatNumber(d.data.Revenue) + "($)<br>" + 
+                                                            "Inflation Adjusted Revenue: " + formatNumber(d.data.Revenue_Inf_Adj) + "($)"
+                                                    );
+                            }).on('mouseup', function(d){
+                                    d3.selectAll(".tooltip").remove();
+                            })
+                    
+                    g.append('text')
+                            .attr('transform', function(d) {//  to move the label to outside the bar: from https://stackoverflow.com/questions/8053424/label-outside-arc-pie-chart-d3-js
+                                    var c = arc.centroid(d),
+                                            x = c[0],
+                                            y = c[1],
+                                    // pythagorean theorem for hypotenuse
+                                    h = Math.sqrt(x*x + y*y);
+                                    return "translate(" + (x/h * radius) +  ',' + (y/h * radius) +  ")";
+                            })
+                            .text(d => `${d.data.Format} ${Math.round(d.data.Pctg * 1000)/10}%`)
+                            .style('font-size', 14)
+                            .style('fill', 'black')
+                            .style('text-anchor', 'end')
+
+                    var legendG = svg_scen3.selectAll(".legend")
+                            .data(pct_data)
+                            .enter().append("g")
+                            .attr("transform", function(d,i){
+                            return "translate(" + (width - 110) + "," + (i * 15 + 20) + ")";
+                            })
+                    .attr("class", "legend");   
+
+                    legendG.append("rect")
+                            .attr("width", 10)
+                            .attr("height", 10)
+                            .attr("fill", function(d, i) {
+                                    return colorScale(i);
+                            });
+
+                    legendG.append("text")
+                            .text(function(d){
+                                    return d.Format;
+                            })
+                            .style("font-size", 12)
+                            .attr("y", 10)
+                            .attr("x", 11);
+                    d3.select('#prev').on("click", function() {
+                            Scene2Plot(data, obj)
+                    })
+                    d3.select('#next').on("click", function() {
+                            alert("End of Visualization reached.")
+                    })
+            }
+
         </script>
     </body>
 </html>

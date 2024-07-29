@@ -1,0 +1,41 @@
+body {
+    padding: 0;
+    margin: 10;
+}
+
+.bar{
+    height: 30;
+    text-align: center;
+    margin: 10px;
+    fill: lightblue;
+}
+
+.axis text {
+    stroke: #6CA9E3;
+    font-family: verdana;
+}
+
+.title {
+    font-family: verdana;
+    font-weight: 900;
+    font-size:large;
+    fill: black
+}
+.note {
+    font-family: verdana;
+    font-weight: 600;
+    font-size: small;
+    fill: #6CA9E3
+}
+.tooltip{
+    position: absolute;
+    background-color: white;
+    color: black;
+    font-size: 15px;
+    padding: 5px;
+    border: 1px solid black;
+}
+.b {
+    font-size: 10px;
+    padding:10px 20px;
+}
