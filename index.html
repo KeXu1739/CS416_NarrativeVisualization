@@ -33,7 +33,7 @@
                         .text('Next')
 
 
-            d3.csv('/data/US_Recorded_Music_Revenues_by_Format_filtered.csv', function(d){
+            d3.csv('US_Recorded_Music_Revenues_by_Format_filtered.csv', function(d){
                     return {
                             Format: d.Format,
                             Year: +d.Year,
