@@ -9,11 +9,10 @@
     <body>
         <h2> Data Source </h2>
         <p> The source of this data visualization is from <a rel="music_revenue_data" href="https://www.kaggle.com/datasets/thedevastator/us-recorded-music-revenue-by-format"> kaggle data</a>, RIAA 
-            has  provided a tableau visualization on the revenue on website <a rel="riaa_visualization" href="https://www.riaa.com/u-s-sales-database/"> RIAA Visualization</a>, please refer to the page if more details is needed.
+            has  provided a tableau visualization on the revenue on website <a rel="riaa_visualization" href="https://www.riaa.com/u-s-sales-database/"> RIAA Visualization</a>, please refer to the page if more details are needed.
         </p>
         <h2> Intro </h2>
-        <p> This visualization provides break-down on the music revenue through chart/graphs.</p>
-        <h3 id="first_scene_note">Filter the visualization by Year with the drop-down button</h3>
+        <p> This visualization provides break-down on the music revenue through multiple charts. User can follow the instruction on each page for interaction.</p>
         
         <script>
             const margin = {top: 100, right:200, bottom:100, left:200}
@@ -34,7 +33,7 @@
                         .text('Next')
 
 
-            d3.csv('US_Recorded_Music_Revenues_by_Format_filtered.csv', function(d){
+            d3.csv('/data/US_Recorded_Music_Revenues_by_Format_filtered.csv', function(d){
                     return {
                             Format: d.Format,
                             Year: +d.Year,
@@ -101,6 +100,7 @@
                     // scene1: a trend chart using total revenue for each year, user can hover on a dot, under which case dot will grow bigger and
                     //  will show a tooltip giving year:revenue; user can also click the dot, which kick start the scene 2 generator
                     removeSVGAndTip();
+                    const formatNumber = d3.format(",");
                     const svg_scen1 = d3.select('body').append('svg')
                             .attr('height', height + margin.top + margin.bottom)
                             .attr('width', width + margin.left + margin.right)
@@ -167,13 +167,20 @@
                     circle.on('mouseover', function(d) {
                             const bar = d3.select(this).transition().duration(300)
                                     .style('r', 15)
-
+                            var position = d3.mouse(svg_scen1.node());
+                            d3.select("body").append('div').classed('tooltip', true)
+                                    .style('left', position[0] + 20 + 'px')
+                                    .style('top', position[1] + 150 + 'px')
+                                            .html(
+                                                    "Year: " + d.Year +"<br>"+
+                                                    "Total Revenue: " + formatNumber(d.Revenue)
+                                            );
                     
                     })
                     .on('mouseout', function(d) {
                             const bar = d3.select(this).transition().duration(300)
                                     .style('r', 7)
-
+                            d3.selectAll(".tooltip").remove();
                     }).on('click', function(d) {
                                     // trigger: on clicking a point: goes to second plot scene
                                     Scene2Plot(data, d)
@@ -194,7 +201,6 @@
             function Scene2Plot(data, obj){
                     // 
                     removeSVGAndTip();
-                    console.log(obj);
                     var year_data = filterByYear(data, obj.Year);
                     var svg_scen2 = d3.select("body").append('svg')
                                     .attr('height', height + margin.top + margin.bottom)
@@ -234,11 +240,20 @@
                             bars.on('mouseover', function(d) {
                                     const bar = d3.select(this).transition().duration(500)
                                             .style('opacity', .9)
+                                    var position = d3.mouse(svg_scen2.node());
+                                    d3.select("body").append('div').classed('tooltip', true)
+                                            .style('left', position[0] + 20 + 'px')
+                                            .style('top', position[1] + 150 + 'px')
+                                                    .html(
+                                                            "Format: " + d.Format + "<br>" +
+                                                            "Revenue: " + formatNumber(d.Revenue) + "($)"
+                                                    );
 
                             })
                             .on('mouseout', function(d) {
                                     const bar = d3.select(this).transition().duration(500)
                                             .style('opacity', .5)
+                                    d3.selectAll(".tooltip").remove();
 
                             })
                             .on('click', function(d) {
@@ -285,7 +300,6 @@
 
             function Scene3PieAndInforForAFormat(data, obj){
                     removeSVGAndTip();
-                    console.log(obj);
                     const formatNumber = d3.format(",");
                     var original_opacity = 0.2;
                     var new_opacity = 1;
@@ -337,7 +351,7 @@
                     const g = svg_scen3.selectAll('.arc')
                                     .data(pie(pct_data)).enter().append('g')
                                     .attr('class', 'arc')
-                                    .attr('transform', `translate(${radius}, ${radius})`)
+                                    .attr('transform', `translate(${radius*2}, ${radius})`)
                     g.append('path')
                             .attr('d', arc)
                             .attr('class', 'arc')
@@ -380,7 +394,6 @@
                                     
                             }).on('mousedown', function(d){
                                     var position = d3.mouse(svg_scen3.node());
-                                    console.log(position);
                                     d3.select("body").append('div').classed('tooltip', true)
                                             .style('left', position[0] + 20 + 'px')
                                             .style('top', position[1] + 150 + 'px')
